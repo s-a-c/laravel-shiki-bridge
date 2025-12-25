@@ -1,0 +1,67 @@
+php-version = "8.2"
+stack-size = 8388608
+allow-unsupported-php-version = true
+threads = 1
+
+[source]
+includes = ["vendor"]
+paths = ["src", "tests"]
+excludes = [
+    "storage",
+    "tmp",
+    "node_modules",
+    "bootstrap/cache",
+]
+extensions = ["php"]
+
+[linter]
+# Linter configuration - rules are configured via excludes if needed
+excludes = ["tests/**"]
+
+[formatter]
+print-width = 120
+use-tabs = false
+
+[guard]
+# Architectural guard rules
+
+# Perimeter Rules: Define dependency boundaries between namespaces
+[[guard.perimeter.rules]]
+namespace = "Sac\\ShikiBridge\\Commands\\"
+permit = [
+    "@self",
+    "@native",
+    "Sac\\ShikiBridge\\Data\\",
+    "Illuminate\\",
+]
+
+[[guard.perimeter.rules]]
+namespace = "Sac\\ShikiBridge\\Components\\"
+permit = [
+    "@self",
+    "@native",
+    "Illuminate\\",
+]
+
+[[guard.perimeter.rules]]
+namespace = "Sac\\ShikiBridge\\Data\\"
+permit = [
+    "@self",
+    "@native",
+]
+
+[[guard.perimeter.rules]]
+namespace = "Sac\\ShikiBridge\\Providers\\"
+permit = [
+    "@self",
+    "@native",
+    "Sac\\ShikiBridge\\Commands\\",
+    "Sac\\ShikiBridge\\Components\\",
+    "Illuminate\\",
+]
+
+# Structural Rules: Enforce code structure within namespaces
+[[guard.structural.rules]]
+on = "Sac\\ShikiBridge\\**"
+target = "class"
+must-be-final = true

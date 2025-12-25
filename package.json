@@ -1,0 +1,13 @@
+{
+  "name": "laravel-shiki-bridge",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "shiki": "^3.20.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}

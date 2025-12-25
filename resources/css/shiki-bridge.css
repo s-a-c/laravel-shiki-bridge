@@ -1,0 +1,59 @@
+/* * Laravel Shiki Bridge - Token Map
+ * Maps Highlight.php generic classes to Shiki generated variables.
+ */
+
+.shiki-wrapper {
+  background-color: var(--shiki-bg);
+  color: var(--shiki-fg);
+  overflow-x: auto;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  line-height: 1.5;
+}
+
+/* Scoped to .shiki-renderer to prevent conflicts with other highlighters */
+
+.shiki-renderer .hljs-comment,
+.shiki-renderer .hljs-quote {
+  color: var(--shiki-token-comment);
+  font-style: italic;
+}
+
+.shiki-renderer .hljs-keyword,
+.shiki-renderer .hljs-selector-tag,
+.shiki-renderer .hljs-literal,
+.shiki-renderer .hljs-meta .hljs-keyword {
+  color: var(--shiki-token-keyword);
+}
+
+.shiki-renderer .hljs-string,
+.shiki-renderer .hljs-doctag {
+  color: var(--shiki-token-string);
+}
+
+.shiki-renderer .hljs-title,
+.shiki-renderer .hljs-section,
+.shiki-renderer .hljs-selector-id {
+  color: var(--shiki-token-function);
+}
+
+.shiki-renderer .hljs-type,
+.shiki-renderer .hljs-class .hljs-title {
+  color: var(--shiki-token-class);
+}
+
+.shiki-renderer .hljs-variable,
+.shiki-renderer .hljs-template-variable {
+  color: var(--shiki-token-variable);
+}
+
+.shiki-renderer .hljs-number,
+.shiki-renderer .hljs-regexp {
+  color: var(--shiki-token-constant);
+}
+
+.shiki-renderer .hljs-punctuation,
+.shiki-renderer .hljs-operator,
+.shiki-renderer .hljs-meta {
+  color: var(--shiki-token-punctuation);
+}

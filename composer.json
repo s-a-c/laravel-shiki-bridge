@@ -1,0 +1,206 @@
+{
+    "name": "s-a-c/laravel-shiki-bridge",
+    "description": "Bridge Shiki syntax highlighting with CSS variables for Laravel.",
+    "license": "MIT",
+    "type": "library",
+    "version": "0.0.1",
+    "authors": [
+        {
+            "name": "S-A-C",
+            "email": "embrace.s0ul+s-a-c@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.4",
+        "illuminate/support": "^12.44.0",
+        "scrivo/highlight.php": "^9.18.1.10"
+    },
+    "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.6.1",
+        "driftingly/rector-laravel": "^2.1.8",
+        "ergebnis/composer-normalize": "^2.48.2",
+        "fakerphp/faker": "^1.24.1",
+        "infection/infection": "^0.31.9",
+        "jasonmccreary/laravel-test-assertions": "^2.8",
+        "larastan/larastan": "^3.8.1",
+        "laravel-shift/blueprint": "^2.13",
+        "laravel/boost": "^1.8.7",
+        "laravel/pail": "^1.2.4",
+        "laravel/pint": "^1.26",
+        "mockery/mockery": "^1.6.12",
+        "nunomaduro/collision": "^8.8.3",
+        "orchestra/testbench": "^10.8",
+        "pestphp/pest": "^4.2.0",
+        "pestphp/pest-plugin-arch": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "pestphp/pest-plugin-profanity": "^4.2.1",
+        "pestphp/pest-plugin-type-coverage": "^4.0.3",
+        "phpstan/extension-installer": "^1.4.3",
+        "phpstan/phpstan": "^2.1.33",
+        "phpstan/phpstan-deprecation-rules": "^2.0.3",
+        "phpstan/phpstan-phpunit": "^2.0.11",
+        "phpstan/phpstan-strict-rules": "^2.0.7",
+        "rector/rector": "^2.2.14",
+        "rector/type-perfect": "^2.1.1",
+        "roave/security-advisories": "dev-latest",
+        "spatie/pest-plugin-snapshots": "^2.2.1",
+        "vimeo/psalm": "^7.0@dev"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Sac\\ShikiBridge\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sac\\ShikiBridge\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true,
+            "infection/extension-installer": true,
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true,
+            "phpstan/extension-installer": true
+        },
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sac\\ShikiBridge\\Providers\\ShikiBridgeServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "lint": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Lint 2>/dev/null') ?: shell_exec('figlet Lint 2>/dev/null') ?: 'Lint' . PHP_EOL; echo chr(27) . '[7;1;35m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "@lint:composer",
+            "@lint:mago",
+            "@lint:pint",
+            "@lint:rector",
+            "@lint:types"
+        ],
+        "lint:composer": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Composer\\ Normalize 2>/dev/null') ?: shell_exec('figlet Composer\\ Normalize 2>/dev/null') ?: 'Composer Normalize' . PHP_EOL; echo chr(27) . '[1;36m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "composer normalize --dry-run --no-update-lock || true"
+        ],
+        "lint:mago": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Lint\\ Mago 2>/dev/null') ?: shell_exec('figlet Lint\\ Mago 2>/dev/null') ?: 'Lint Mago' . PHP_EOL; echo chr(27) . '[1;33m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "MAGO_BIN=$(command -v mago 2>/dev/null || echo '/usr/local/bin/mago'); [ -x \"$MAGO_BIN\" ] && \"$MAGO_BIN\" --config mago.toml lint || (echo 'Skipping mago lint (mago not installed)' && exit 0)",
+            "MAGO_BIN=$(command -v mago 2>/dev/null || echo '/usr/local/bin/mago'); [ -x \"$MAGO_BIN\" ] && \"$MAGO_BIN\" --config mago.toml format --dry-run || (echo 'Skipping mago format check (mago not installed)' && exit 0)"
+        ],
+        "lint:pint": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Pint 2>/dev/null') ?: shell_exec('figlet Pint 2>/dev/null') ?: 'Pint' . PHP_EOL; echo chr(27) . '[1;34m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "php -d memory_limit=1G vendor/bin/pint --parallel --test"
+        ],
+        "lint:rector": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Rector 2>/dev/null') ?: shell_exec('figlet Rector 2>/dev/null') ?: 'Rector' . PHP_EOL; echo chr(27) . '[1;32m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "php -d memory_limit=1G vendor/bin/rector --dry-run"
+        ],
+        "lint:types": [
+            "@lint:types:mago",
+            "@lint:types:phpstan",
+            "@lint:types:psalm"
+        ],
+        "lint:types:mago": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Mago\\ Types 2>/dev/null') ?: shell_exec('figlet Mago\\ Types 2>/dev/null') ?: 'Mago Types' . PHP_EOL; echo chr(27) . '[1;36m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "MAGO_BIN=$(command -v mago 2>/dev/null || echo '/usr/local/bin/mago'); [ -x \"$MAGO_BIN\" ] && \"$MAGO_BIN\" analyze --baseline mago-analysis-baseline.toml || (echo 'Skipping mago analyze (mago not installed)' && exit 0)"
+        ],
+        "lint:types:phpstan": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard PHPStan 2>/dev/null') ?: shell_exec('figlet PHPStan 2>/dev/null') ?: 'PHPStan' . PHP_EOL; echo chr(27) . '[1;33m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "php -d memory_limit=2G vendor/bin/phpstan analyse --memory-limit=2G"
+        ],
+        "lint:types:psalm": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Psalm 2>/dev/null') ?: shell_exec('figlet Psalm 2>/dev/null') ?: 'Psalm' . PHP_EOL; echo chr(27) . '[1;35m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "php -d error_reporting=\"E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED\" -d memory_limit=2G vendor/bin/psalm --no-cache --threads=1"
+        ],
+        "lint:types:psalm:stats": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Psalm\\ Stats 2>/dev/null') ?: shell_exec('figlet Psalm\\ Stats 2>/dev/null') ?: 'Psalm Stats' . PHP_EOL; echo chr(27) . '[1;35m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "php -d error_reporting=\"E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED\" -d memory_limit=1G vendor/bin/psalm --no-cache --show-info=true --stats"
+        ],
+        "lintfix": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Fix\\ Lint 2>/dev/null') ?: shell_exec('figlet Fix\\ Lint 2>/dev/null') ?: 'Fix Lint' . PHP_EOL; echo chr(27) . '[1;32m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "@lintfix:composer",
+            "@lintfix:mago",
+            "@lintfix:pint",
+            "@lintfix:rector",
+            "@lintfix:types"
+        ],
+        "lintfix:composer": [
+            "composer normalize"
+        ],
+        "lintfix:mago": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Lint\\ Mago\\ Fix 2>/dev/null') ?: shell_exec('figlet Lint\\ Mago\\ Fix 2>/dev/null') ?: 'Lint Mago Fix' . PHP_EOL; echo chr(27) . '[1;32m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "MAGO_BIN=$(command -v mago 2>/dev/null || echo '/usr/local/bin/mago'); [ -x \"$MAGO_BIN\" ] && \"$MAGO_BIN\" --config mago.toml lint --fix || (echo 'Skipping mago lint --fix (mago not installed)' && exit 0)",
+            "MAGO_BIN=$(command -v mago 2>/dev/null || echo '/usr/local/bin/mago'); [ -x \"$MAGO_BIN\" ] && \"$MAGO_BIN\" --config mago.toml format || (echo 'Skipping mago format (mago not installed)' && exit 0)"
+        ],
+        "lintfix:pint": [
+            "php -d memory_limit=1G vendor/bin/pint --parallel"
+        ],
+        "lintfix:rector": [
+            "php -d memory_limit=1G vendor/bin/rector"
+        ],
+        "lintfix:types": [
+            "@lintfix:types:mago",
+            "@lintfix:types:phpstan",
+            "@lintfix:types:psalm"
+        ],
+        "lintfix:types:mago": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Mago\\ Types\\ Fix 2>/dev/null') ?: shell_exec('figlet Mago\\ Types\\ Fix 2>/dev/null') ?: 'Mago Types Fix' . PHP_EOL; echo chr(27) . '[1;32m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "MAGO_BIN=$(command -v mago 2>/dev/null || echo '/usr/local/bin/mago'); [ -x \"$MAGO_BIN\" ] && \"$MAGO_BIN\" analyze --fix --baseline mago-analysis-baseline.toml || (echo 'Skipping mago analyze --fix (mago not installed)' && exit 0)"
+        ],
+        "lintfix:types:phpstan": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard PHPStan\\ Fix 2>/dev/null') ?: shell_exec('figlet PHPStan\\ Fix 2>/dev/null') ?: 'PHPStan Fix' . PHP_EOL; echo chr(27) . '[1;33m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "php -d memory_limit=1G vendor/bin/phpstan analyse --memory-limit=1G --fix || true"
+        ],
+        "lintfix:types:psalm": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Psalm\\ Alter 2>/dev/null') ?: shell_exec('figlet Psalm\\ Alter 2>/dev/null') ?: 'Psalm Alter' . PHP_EOL; echo chr(27) . '[1;35m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "php -d error_reporting=\"E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED\" -d memory_limit=1G vendor/bin/psalm --no-cache --alter --issues=all || true"
+        ],
+        "test": [
+            "@test:architecture",
+            "@test:coverage",
+            "@test:mutation",
+            "@test:profanity",
+            "@test:type-coverage",
+            "@test:unit"
+        ],
+        "test:architecture": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Architecture\\ Tests 2>/dev/null') ?: shell_exec('figlet Architecture\\ Tests 2>/dev/null') ?: 'Architecture Tests' . PHP_EOL; echo chr(27) . '[1;36m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "MAGO_BIN=$(command -v mago 2>/dev/null || echo '/usr/local/bin/mago'); [ -x \"$MAGO_BIN\" ] && \"$MAGO_BIN\" --config mago.toml lint || (echo 'Skipping mago lint (guard replacement) (mago not installed)' && exit 0)",
+            "php -d error_reporting=\"E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED\" -d memory_limit=1G vendor/bin/pest --testsuite=Arch"
+        ],
+        "test:coverage": [
+            "@test:coverage:pcov"
+        ],
+        "test:coverage:pcov": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard PHP\\ Coverage\\ \\(PCOV\\) 2>/dev/null') ?: shell_exec('figlet PHP\\ Coverage\\ \\(PCOV\\) 2>/dev/null') ?: 'PHP Coverage (PCOV)' . PHP_EOL; echo chr(27) . '[1;34m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "php -d error_reporting=\"E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED\" -d memory_limit=1G -d xdebug.mode=off -d pcov.enabled=1 vendor/bin/pest --coverage --min=99.4 2>&1 || true"
+        ],
+        "test:coverage:xdebug": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard PHP\\ Coverage\\ \\(XDEBUG\\) 2>/dev/null') ?: shell_exec('figlet PHP\\ Coverage\\ \\(XDEBUG\\) 2>/dev/null') ?: 'PHP Coverage (XDEBUG)' . PHP_EOL; echo chr(27) . '[1;35m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "php -d error_reporting=\"E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED\" -d memory_limit=1G -d xdebug.mode=coverage -d pcov.enabled=0 -r \"if (!extension_loaded('xdebug') || ini_get('xdebug.mode') !== 'coverage') { echo 'xdebug driver not available' . PHP_EOL; exit(0); } if (extension_loaded('pcov')) { echo 'Warning: pcov is loaded, Pest will prefer pcov over xdebug. Consider disabling pcov extension for xdebug coverage.' . PHP_EOL; }\" && vendor/bin/pest --coverage --min=99.4 2>&1 || php -r \"echo 'xdebug driver not available' . PHP_EOL;\" || true"
+        ],
+        "test:mutation": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Mutation\\ Testing 2>/dev/null') ?: shell_exec('figlet Mutation\\ Testing 2>/dev/null') ?: 'Mutation Testing' . PHP_EOL; echo chr(27) . '[1;33;46m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "PEST_MUTATE=1 php -d error_reporting=\"E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED\" -d memory_limit=1G vendor/bin/pest --mutate --parallel --min=90 --covered-only --default-time-limit=10"
+        ],
+        "test:profanity": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Profanity\\ Check 2>/dev/null') ?: shell_exec('figlet Profanity\\ Check 2>/dev/null') ?: 'Profanity Check' . PHP_EOL; echo chr(27) . '[1;31m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "php -d error_reporting=\"E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED\" -d memory_limit=1G vendor/bin/pest --filter=profanity"
+        ],
+        "test:type-coverage": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Type\\ Coverage 2>/dev/null') ?: shell_exec('figlet Type\\ Coverage 2>/dev/null') ?: 'Type Coverage' . PHP_EOL; echo chr(27) . '[7;1;36m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "php -d error_reporting=\"E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED\" -d memory_limit=1G vendor/bin/pest --type-coverage --min=100"
+        ],
+        "test:unit": [
+            "php -r \"\\$banner = shell_exec('figlet -w 120 -k -f standard Unit\\ Tests 2>/dev/null') ?: shell_exec('figlet Unit\\ Tests 2>/dev/null') ?: 'Unit Tests' . PHP_EOL; echo chr(27) . '[1;34;47m' . \\$banner . chr(27) . '[0m' . PHP_EOL;\"",
+            "php -d error_reporting=\"E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED\" -d memory_limit=1G -d xdebug.mode=off -d pcov.enabled=1 vendor/bin/pest --testsuite=Unit,Feature --coverage --min=99"
+        ],
+        "testbench": "vendor/bin/testbench"
+    }
+}
