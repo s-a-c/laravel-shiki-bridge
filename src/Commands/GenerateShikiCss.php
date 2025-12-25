@@ -18,54 +18,9 @@ final class GenerateShikiCss extends Command
     /** @var string */
     protected $description = 'Generate CSS variables from Shiki themes using the local JS runtime';
 
-    public function handle(): int
-    {
-        $manager = $this->detectManager();
-
-        $this->info("Detected runtime environment: <comment>{$manager->name}</comment>");
-
-        // 1. Check for Shiki installation
-        if (! $this->isShikiInstalled($manager)) {
-            $this->warn('Shiki is not installed.');
-
-            if (! $this->confirm("Install shiki via {$manager->name}?", true)) {
-                return self::FAILURE;
-            }
-
-            $this->installShiki($manager);
-        }
-
-        // 2. Prepare Config
-        // We use a temporary file to avoid CLI argument length limits
-        $configPath = $this->createTemporaryConfig();
-        $scriptPath = __DIR__.'/../../bin/build-themes.js';
-
-        // 3. Construct Run Command
-        // Example: "bun bin/build-themes.js --config=..."
-        $command = sprintf('%s "%s" --config="%s"', $manager->runPrefix, $scriptPath, $configPath);
-
-        $this->info('Executing build script...');
-
-        $result = Process::run($command);
-
-        // Always clean up temp file
-        if (file_exists($configPath)) {
-            unlink($configPath);
-        }
-
-        if ($result->successful()) {
-            $this->info('✓ Shiki CSS generated successfully!');
-
-            return self::SUCCESS;
-        }
-
-        $this->error('Failed to generate CSS.');
-        $this->error($result->errorOutput());
-        $this->line($result->output());
-
-        return self::FAILURE;
-    }
-
+    /**
+     * @phpstan-ignore-next-line
+     */
     private function detectManager(): PackageManager
     {
         $bunLock = base_path('bun.lockb');
@@ -77,46 +32,46 @@ final class GenerateShikiCss extends Command
         if (File::exists($bunLock)) {
             return new PackageManager(
                 name: 'bun',
-                binary: 'bun',
                 installCommand: 'bun add -D shiki',
                 runPrefix: 'bun',
+                binary: 'bun',
             );
         }
 
         if (File::exists($pnpmLock)) {
             return new PackageManager(
                 name: 'pnpm',
-                binary: 'pnpm',
                 installCommand: 'pnpm add -D shiki',
                 runPrefix: 'node',
+                binary: 'pnpm',
             );
         }
 
         if (File::exists($yarnLock)) {
             return new PackageManager(
                 name: 'yarn',
-                binary: 'yarn',
                 installCommand: 'yarn add -D shiki',
                 runPrefix: 'node',
+                binary: 'yarn',
             );
         }
 
         if (File::exists($denoLock) || File::exists($denoJson)) {
             return new PackageManager(
                 name: 'deno',
-                binary: 'deno',
                 installCommand: 'deno install --dev npm:shiki',
                 // Deno requires explicit permission flags
                 runPrefix: 'deno run --allow-read --allow-write --allow-env',
+                binary: 'deno',
             );
         }
 
         // Default to NPM
         return new PackageManager(
             name: 'npm',
-            binary: 'npm',
             installCommand: 'npm install -D shiki',
             runPrefix: 'node',
+            binary: 'npm',
         );
     }
 

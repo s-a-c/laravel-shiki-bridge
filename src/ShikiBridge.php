@@ -16,7 +16,7 @@ final class ShikiBridge
      */
     public static function highlight(string $code, string $language = 'php'): string
     {
-        if (self::$highlighter === null) {
+        if (! self::$highlighter instanceof Highlighter) {
             self::$highlighter = new Highlighter();
         }
 

@@ -8,8 +8,8 @@ final readonly class PackageManager
 {
     public function __construct(
         public string $name,
-        public string $binary,
         public string $installCommand,
         public string $runPrefix,
+        public string $binary,
     ) {}
 }

@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Sac\ShikiBridge\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Override;
 use Sac\ShikiBridge\Commands\GenerateShikiCss;
 use Sac\ShikiBridge\Components\ShikiCode;
 
 final class ShikiBridgeServiceProvider extends ServiceProvider
 {
+    #[Override]
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../../config/shiki-bridge.php', 'shiki-bridge');

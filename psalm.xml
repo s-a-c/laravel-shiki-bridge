@@ -8,6 +8,24 @@
     <projectFiles>
         <directory name="src" />
     </projectFiles>
+    <issueHandlers>
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <file name="src/Components/ShikiCode.php" />
+                <file name="src/Commands/GenerateShikiCss.php" />
+            </errorLevel>
+        </PropertyNotSetInConstructor>
+        <PossiblyUnusedProperty>
+            <errorLevel type="suppress">
+                <file name="src/Data/PackageManager.php" />
+            </errorLevel>
+        </PossiblyUnusedProperty>
+        <UnusedClass>
+            <errorLevel type="suppress">
+                <file name="src/Providers/ShikiBridgeServiceProvider.php" />
+            </errorLevel>
+        </UnusedClass>
+    </issueHandlers>
     <plugins>
         </plugins>
 </psalm>

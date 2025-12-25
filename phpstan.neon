@@ -6,3 +6,6 @@ parameters:
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
+    ignoreErrors:
+        - '#Method .*::(detectManager|isShikiInstalled|installShiki|createTemporaryConfig)\(\) is unused#'
+        - '#Out of .* possible property types, only .* actually have it#'
