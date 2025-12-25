@@ -11,7 +11,6 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 bun.lockb
-phpunit.xml
 
 .clinerules/byterover-rules.md
 .kilocode/rules/byterover-rules.md
