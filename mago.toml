@@ -19,6 +19,11 @@ extensions = ["php"]
 excludes = ["tests/**"]
 
 [formatter]
+# Match Laravel Pint formatting settings
+# - 4 spaces for indentation (matches .editorconfig and Pint's Laravel preset)
+#   Mago defaults to 4 spaces when use-tabs = false
+# - 120 character line width (matches Pint's default)
+# - Use spaces instead of tabs (matches Pint)
 print-width = 120
 use-tabs = false
 
