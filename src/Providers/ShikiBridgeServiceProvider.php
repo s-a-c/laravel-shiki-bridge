@@ -12,10 +12,7 @@ final class ShikiBridgeServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->mergeConfigFrom(
-            __DIR__.'/../../config/shiki-bridge.php',
-            'shiki-bridge'
-        );
+        $this->mergeConfigFrom(__DIR__.'/../../config/shiki-bridge.php', 'shiki-bridge');
     }
 
     public function boot(): void

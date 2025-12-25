@@ -9,7 +9,7 @@ use Highlight\Highlighter;
 
 final class ShikiBridge
 {
-    private static null|Highlighter $highlighter = null;
+    private static ?Highlighter $highlighter = null;
 
     /**
      * Highlight code and wrap it in Shiki Bridge HTML.
@@ -23,6 +23,7 @@ final class ShikiBridge
         try {
             // Tokenize: Returns generic HTML classes (hljs-comment, etc.)
             $result = self::$highlighter->highlight($language, $code);
+            /** @var string $html */
             $html = $result->value;
         } catch (Exception $e) {
             // Fallback for unknown languages

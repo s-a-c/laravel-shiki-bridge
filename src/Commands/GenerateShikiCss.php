@@ -42,12 +42,7 @@ final class GenerateShikiCss extends Command
 
         // 3. Construct Run Command
         // Example: "bun bin/build-themes.js --config=..."
-        $command = sprintf(
-            '%s "%s" --config="%s"',
-            $manager->runPrefix,
-            $scriptPath,
-            $configPath
-        );
+        $command = sprintf('%s "%s" --config="%s"', $manager->runPrefix, $scriptPath, $configPath);
 
         $this->info('Executing build script...');
 
@@ -73,19 +68,18 @@ final class GenerateShikiCss extends Command
 
     private function detectManager(): PackageManager
     {
-        // We cast base_path to string because in some contexts it might return false (though rare in Laravel app context)
-        $bunLock = (string) base_path('bun.lockb');
-        $pnpmLock = (string) base_path('pnpm-lock.yaml');
-        $yarnLock = (string) base_path('yarn.lock');
-        $denoLock = (string) base_path('deno.lock');
-        $denoJson = (string) base_path('deno.json');
+        $bunLock = base_path('bun.lockb');
+        $pnpmLock = base_path('pnpm-lock.yaml');
+        $yarnLock = base_path('yarn.lock');
+        $denoLock = base_path('deno.lock');
+        $denoJson = base_path('deno.json');
 
         if (File::exists($bunLock)) {
             return new PackageManager(
                 name: 'bun',
                 binary: 'bun',
                 installCommand: 'bun add -D shiki',
-                runPrefix: 'bun'
+                runPrefix: 'bun',
             );
         }
 
@@ -94,7 +88,7 @@ final class GenerateShikiCss extends Command
                 name: 'pnpm',
                 binary: 'pnpm',
                 installCommand: 'pnpm add -D shiki',
-                runPrefix: 'node'
+                runPrefix: 'node',
             );
         }
 
@@ -103,7 +97,7 @@ final class GenerateShikiCss extends Command
                 name: 'yarn',
                 binary: 'yarn',
                 installCommand: 'yarn add -D shiki',
-                runPrefix: 'node'
+                runPrefix: 'node',
             );
         }
 
@@ -113,7 +107,7 @@ final class GenerateShikiCss extends Command
                 binary: 'deno',
                 installCommand: 'deno install --dev npm:shiki',
                 // Deno requires explicit permission flags
-                runPrefix: 'deno run --allow-read --allow-write --allow-env'
+                runPrefix: 'deno run --allow-read --allow-write --allow-env',
             );
         }
 
@@ -122,7 +116,7 @@ final class GenerateShikiCss extends Command
             name: 'npm',
             binary: 'npm',
             installCommand: 'npm install -D shiki',
-            runPrefix: 'node'
+            runPrefix: 'node',
         );
     }
 
@@ -130,19 +124,22 @@ final class GenerateShikiCss extends Command
     {
         // If using Deno, check deno.json content or lockfile
         if ($manager->name === 'deno') {
-            $denoJsonPath = (string) base_path('deno.json');
+            $denoJsonPath = base_path('deno.json');
             if (File::exists($denoJsonPath)) {
                 $content = File::get($denoJsonPath);
 
-                // Strict check ensures we don't return null
-                return is_string($content) && str_contains(haystack: $content, needle: 'shiki');
+                // File::get() returns string, so we can directly check
+                return str_contains(
+                    haystack: $content,
+                    needle: 'shiki',
+                );
             }
 
             return false;
         }
 
         // Standard Node Check
-        return File::exists((string) base_path('node_modules/shiki'));
+        return File::exists(base_path('node_modules/shiki'));
     }
 
     private function installShiki(PackageManager $manager): void

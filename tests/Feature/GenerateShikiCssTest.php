@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Sac\ShikiBridge\Tests\Feature;
 
+use Exception;
 use Illuminate\Process\PendingProcess;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
+use ReflectionClass;
 use RuntimeException;
 use Sac\ShikiBridge\Commands\GenerateShikiCss;
 
@@ -16,7 +18,7 @@ afterEach(function (): void {
     // Cleanup lock files
     $files = ['bun.lockb', 'pnpm-lock.yaml', 'yarn.lock', 'deno.lock', 'package-lock.json', 'deno.json'];
     foreach ($files as $file) {
-        if (!File::exists(base_path($file))) {
+        if (! File::exists(base_path($file))) {
             continue;
         }
         File::delete(base_path($file));
@@ -48,7 +50,7 @@ it('generates css file using the node script with bun', function (): void {
     // 2. ASSERTION UPDATE: Verify the config path ends in .json
     // This kills the mutation "ConcatRemoveRight"
     Process::assertRan(
-        fn(PendingProcess $process): bool => (
+        fn (PendingProcess $process): bool => (
             str_contains(
                 haystack: $process->command,
                 needle: 'build-themes.js',
@@ -104,7 +106,7 @@ it('prompts to install shiki if missing', function (): void {
     $this->artisan('shiki:generate')->expectsQuestion('Install shiki via npm?', true)->assertExitCode(0);
 
     // Verify installShiki was called
-    Process::assertRan(fn(PendingProcess $p): bool => str_contains(
+    Process::assertRan(fn (PendingProcess $p): bool => str_contains(
         haystack: $p->command,
         needle: 'npm install',
     ));
@@ -121,10 +123,10 @@ it('calls output callback when installing shiki', function (): void {
 
     try {
         // Create command instance
-        $command = new \Sac\ShikiBridge\Commands\GenerateShikiCss();
+        $command = new GenerateShikiCss();
 
         // Use reflection to access private method
-        $reflection = new \ReflectionClass($command);
+        $reflection = new ReflectionClass($command);
         $installMethod = $reflection->getMethod('installShiki');
         $installMethod->setAccessible(true);
 
@@ -155,7 +157,7 @@ it('calls output callback when installing shiki', function (): void {
         if ($originalFake) {
             Process::swap($originalFake);
         }
-        if (!$originalFake) {
+        if (! $originalFake) {
             Process::fake([]);
         }
     }
@@ -185,7 +187,7 @@ it('detects pnpm package manager', function (): void {
         ->assertExitCode(0);
 
     Process::assertRan(
-        fn(PendingProcess $process): bool => (
+        fn (PendingProcess $process): bool => (
             str_contains(
                 haystack: $process->command,
                 needle: 'build-themes.js',
@@ -215,7 +217,7 @@ it('detects yarn package manager', function (): void {
         ->assertExitCode(0);
 
     Process::assertRan(
-        fn(PendingProcess $process): bool => (
+        fn (PendingProcess $process): bool => (
             str_contains(
                 haystack: $process->command,
                 needle: 'build-themes.js',
@@ -245,7 +247,7 @@ it('detects deno package manager via deno.lock', function (): void {
         ->assertExitCode(0);
 
     Process::assertRan(
-        fn(PendingProcess $process): bool => (
+        fn (PendingProcess $process): bool => (
             str_contains(
                 haystack: $process->command,
                 needle: 'build-themes.js',
@@ -274,7 +276,7 @@ it('detects deno package manager via deno.json', function (): void {
         ->assertExitCode(0);
 
     Process::assertRan(
-        fn(PendingProcess $process): bool => (
+        fn (PendingProcess $process): bool => (
             str_contains(
                 haystack: $process->command,
                 needle: 'build-themes.js',
@@ -313,7 +315,7 @@ it('handles deno when shiki is not installed in deno.json', function (): void {
 
     $this->artisan('shiki:generate')->expectsQuestion('Install shiki via deno?', true)->assertExitCode(0);
 
-    Process::assertRan(fn(PendingProcess $p): bool => str_contains(
+    Process::assertRan(fn (PendingProcess $p): bool => str_contains(
         haystack: $p->command,
         needle: 'deno install',
     ));
@@ -333,7 +335,7 @@ it('handles deno when deno.json does not exist', function (): void {
     // This covers the FalseToTrue mutation - if it returned true, behavior would differ
     $this->artisan('shiki:generate')->expectsQuestion('Install shiki via deno?', true)->assertExitCode(0);
 
-    Process::assertRan(fn(PendingProcess $p): bool => str_contains(
+    Process::assertRan(fn (PendingProcess $p): bool => str_contains(
         haystack: $p->command,
         needle: 'deno install',
     ));
@@ -345,8 +347,8 @@ it('returns false when deno.json does not exist and shiki check fails', function
     // DO NOT create deno.json
 
     // Use reflection to test isShikiInstalled directly
-    $command = new \Sac\ShikiBridge\Commands\GenerateShikiCss();
-    $reflection = new \ReflectionClass($command);
+    $command = new GenerateShikiCss();
+    $reflection = new ReflectionClass($command);
     $isInstalledMethod = $reflection->getMethod('isShikiInstalled');
     $isInstalledMethod->setAccessible(true);
 
@@ -394,8 +396,8 @@ it('covers string casts in detectManager and isShikiInstalled', function (): voi
     $this->artisan('shiki:generate')->assertExitCode(0);
 
     // Test line 133 specifically - the string cast on denoJsonPath
-    $command = new \Sac\ShikiBridge\Commands\GenerateShikiCss();
-    $reflection = new \ReflectionClass($command);
+    $command = new GenerateShikiCss();
+    $reflection = new ReflectionClass($command);
     $isInstalledMethod = $reflection->getMethod('isShikiInstalled');
     $isInstalledMethod->setAccessible(true);
 
@@ -434,7 +436,7 @@ it('defaults to npm when no lock files are present', function (): void {
         ->assertExitCode(0);
 
     Process::assertRan(
-        fn(PendingProcess $process): bool => (
+        fn (PendingProcess $process): bool => (
             str_contains(
                 haystack: $process->command,
                 needle: 'build-themes.js',
@@ -498,7 +500,7 @@ it('uses default true for confirm when shiki is missing', function (): void {
     // This covers the TrueToFalse mutation - if default was false, behavior would differ
     $this->artisan('shiki:generate')->expectsQuestion('Install shiki via npm?', true)->assertExitCode(0); // Default is true, covers line 31
 
-    Process::assertRan(fn(PendingProcess $p): bool => str_contains(
+    Process::assertRan(fn (PendingProcess $p): bool => str_contains(
         haystack: $p->command,
         needle: 'npm install',
     ));
@@ -584,12 +586,12 @@ it('generates unique config file path with uniqid', function (): void {
 
     // Clean up any remaining files
     foreach (glob($pattern) as $file) {
-        if (!file_exists($file)) {
+        if (! file_exists($file)) {
             continue;
         }
         try {
             unlink($file);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // @mago-expect: Ignore cleanup errors - file may already be deleted or locked
             // Suppress unused variable warning - file cleanup race condition is expected
             unset($e); // Use variable to satisfy linter
@@ -625,12 +627,12 @@ it('cleans up config file only if it exists', function (): void {
 
     // Clean up any remaining files
     foreach ($files as $file) {
-        if (!file_exists($file)) {
+        if (! file_exists($file)) {
             continue;
         }
         try {
             unlink($file);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // @mago-expect: Ignore cleanup errors - file may already be deleted or locked
             // Suppress unused variable warning - file cleanup race condition is expected
             unset($e); // Use variable to satisfy linter

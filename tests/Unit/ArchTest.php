@@ -8,10 +8,7 @@ arch('it will not use debugging functions')->expect(['dd', 'dump', 'ray'])->not-
 arch('it requires strict types')->expect('Sac\ShikiBridge')->toUseStrictTypes();
 
 // Structural Rules: All classes must be final
-arch('all classes must be final')->expect('Sac\ShikiBridge')
-    ->classes()
-    ->not->toBeAbstract()
-    ->toBeFinal();
+arch('all classes must be final')->expect('Sac\ShikiBridge')->classes()->not->toBeAbstract()->toBeFinal();
 
 // Perimeter Rules: Dependency Boundaries
 
@@ -19,17 +16,14 @@ arch('all classes must be final')->expect('Sac\ShikiBridge')
 arch('commands should only depend on data classes and laravel')
     ->expect('Sac\ShikiBridge\Commands')
     ->not->toUse('Sac\ShikiBridge\Components')
-    ->not->toUse('Sac\ShikiBridge\Providers')
-    ->toUse('Sac\ShikiBridge\Data')
-    ->toUse('Illuminate');
+    ->not->toUse('Sac\ShikiBridge\Providers')->toUse('Sac\ShikiBridge\Data')->toUse('Illuminate');
 
 // Components should be independent and only depend on Laravel framework
 arch('components should be independent')
     ->expect('Sac\ShikiBridge\Components')
     ->not->toUse('Sac\ShikiBridge\Commands')
     ->not->toUse('Sac\ShikiBridge\Data')
-    ->not->toUse('Sac\ShikiBridge\Providers')
-    ->toUse('Illuminate');
+    ->not->toUse('Sac\ShikiBridge\Providers')->toUse('Illuminate');
 
 // Data classes should be pure data structures with no dependencies
 arch('data classes should have no dependencies')

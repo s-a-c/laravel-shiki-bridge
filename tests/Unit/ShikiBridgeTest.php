@@ -7,7 +7,10 @@ use Sac\ShikiBridge\ShikiBridge;
 it('highlights code with default language', function (): void {
     $html = ShikiBridge::highlight("echo 'hi';", 'php');
 
-    expect($html)->toContain('<pre><code class="language-php shiki-renderer">')->toContain('hljs-keyword')->toContain('shiki-wrapper'); // 'echo' highlighted
+    expect($html)
+        ->toContain('<pre><code class="language-php shiki-renderer">')
+        ->toContain('hljs-keyword')
+        ->toContain('shiki-wrapper'); // 'echo' highlighted
 });
 
 it('handles unknown languages gracefully', function (): void {
